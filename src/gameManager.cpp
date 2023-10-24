@@ -3,7 +3,6 @@
 GameManager::GameManager() {
     CreateGrid(sf::Vector2i(TILE_WIDTH, TILE_HEIGHT), sf::Vector2f(20, 20), sf::Vector2f(20, 20));
     LoadAssets();
-    CreatePalette();
     CreateInstructions();
     SetBrushSize(1);
 }
@@ -24,12 +23,6 @@ void GameManager::UpdateDisplay() {
     for (auto tile : tiles) {
         tile.second->Render(*window);
     }
-
-    for (auto sprite : sprites) {
-        sprite.second->Render(*windowPal);
-    }
-
-    windowText->draw(instructions);
 }
 
 void GameManager::UpdateInput() {
@@ -38,13 +31,13 @@ void GameManager::UpdateInput() {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         switch (brushType) {
             case Draw:
-                DrawTiles();
+                DrawGameObjects();
                 break;
             case Erase:
-                EraseTiles();
+                EraseGameObjects();
                 break;
             case Eyedrop:
-                EyedropTile();
+                EyedropGameObject();
                 break;
             default:
                 break;
@@ -82,14 +75,6 @@ void GameManager::UpdateInput() {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
         brushType = Eyedrop;
         SetBrushSize(1);
-    // } else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) && sf::Keyboard::isKeyPressed(sf::Keyboard::Equal)) {
-    //     if (brushType == Draw || brushType == Erase) {
-    //         SetBrushSize(brushSize + 1);
-    //     }
-    // } else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) && sf::Keyboard::isKeyPressed(sf::Keyboard::Hyphen)) {
-    //     if (brushType == Draw || brushType == Erase) {
-    //         SetBrushSize(brushSize - 1);
-    //     }
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
         Save();
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L) && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
@@ -115,26 +100,6 @@ void GameManager::UpdateEvents() {
                 break;
         }
     }
-
-    while (windowPal->pollEvent(event)) {
-        switch (event.type) {
-            case sf::Event::Closed:
-                windowPal->close();
-                break;
-            default:
-                break;
-        }
-    }
-
-    while (windowText->pollEvent(event)) {
-        switch (event.type) {
-            case sf::Event::Closed:
-                windowText->close();
-                break;
-            default:
-                break;
-        }
-    }
 }
 
 void GameManager::AddAsset(int key, std::string fileName) {
@@ -149,11 +114,11 @@ void GameManager::LoadAssets() {
         assetPath = "../../assets/textures/";
     #endif
 
-    AddAsset(1, assetPath + "BrickTile.png");
-    AddAsset(2, assetPath + "DirtTile.png");
-    AddAsset(3, assetPath + "GrassTile.png");
-    AddAsset(4, assetPath + "WaterTile.png");
-    AddAsset(5, assetPath + "PichuTile.png");
+    AddAsset(1, assetPath + "BrickGameObject.png");
+    AddAsset(2, assetPath + "DirtGameObject.png");
+    AddAsset(3, assetPath + "GrassGameObject.png");
+    AddAsset(4, assetPath + "WaterGameObject.png");
+    AddAsset(5, assetPath + "PichuGameObject.png");
     AddAsset(6, assetPath + "PyoroRed.png");
     AddAsset(7, assetPath + "PyoroWhite.png");
     AddAsset(8, assetPath + "PyoroYellow.png");
@@ -184,15 +149,6 @@ void GameManager::CreateGrid(sf::Vector2i gridDim, sf::Vector2f xMarg, sf::Vecto
     }
 }
 
-void GameManager::CreatePalette() {
-    for (auto& asset : assets) {
-        sprites[asset.first] = new Tile(sf::Vector2i(0, asset.first - 1), asset.second, 
-                               sf::Vector2f(unitDimensions.x * 3, unitDimensions.y * 3), 
-                               sf::Vector2f(windowPalWidth / 3, (windowPalHeight / assets.size() * (asset.first - 1)) + 10),
-                               asset.first);
-    }
-}
-
 void GameManager::CreateInstructions() {
     font.loadFromFile(assetPath + "../fonts/Helvetica.ttf");
     instructions.setFillColor(sf::Color::White);
@@ -201,7 +157,7 @@ void GameManager::CreateInstructions() {
     instructions.setString("  Draw: D         Erase: E        Eyedropper: I \n\n Sprite Type: 1, 2, 3, 4, 5, 6, 7, 8 \n\n Adjust Brush Size: Scroll \n\n Save: Ctrl + S        Load: Ctrl + L");
 }
 
-sf::Vector2i GameManager::GetCurrentTileIndex() {
+sf::Vector2i GameManager::GetCurrentGameObjectIndex() {
     int currentX = static_cast<int>((mousePosition.x - xMargin.x) / unitDimensions.x);
     int currentY = static_cast<int>((mousePosition.y - yMargin.x) / unitDimensions.y);
     // std::cout << "X: " << currentX << ",Y: " << currentY << std::endl;
@@ -212,34 +168,34 @@ sf::Texture* GameManager::GetBrushTexture() {
     return assets[brushTexture];
 }
 
-void GameManager::DrawTiles() {
-    EraseTiles();
-    mouseTile = GetCurrentTileIndex();
+void GameManager::DrawGameObjects() {
+    EraseGameObjects();
+    mouseGameObject = GetCurrentGameObjectIndex();
     int tempBrushSize = brushSize - 1;
     for (int i = -tempBrushSize; i <= tempBrushSize; i++) {
         for (int j = -tempBrushSize; j <= tempBrushSize; j++) {
-            if (!(mouseTile.x + i < 0 || mouseTile.x + i >= TILE_WIDTH 
-                || mouseTile.y + j < 0 || mouseTile.y + j >= TILE_HEIGHT)) { // hehehe
-                tileIndex = sf::Vector2i(mouseTile.x + i, mouseTile.y + j);
-                localTilePosition = sf::Vector2f(tileIndex.x * unitDimensions.x + xMargin.x, tileIndex.y * unitDimensions.y + yMargin.x);
+            if (!(mouseGameObject.x + i < 0 || mouseGameObject.x + i >= TILE_WIDTH 
+                || mouseGameObject.y + j < 0 || mouseGameObject.y + j >= TILE_HEIGHT)) { // hehehe
+                tileIndex = sf::Vector2i(mouseGameObject.x + i, mouseGameObject.y + j);
+                localGameObjectPosition = sf::Vector2f(tileIndex.x * unitDimensions.x + xMargin.x, tileIndex.y * unitDimensions.y + yMargin.x);
                 // std::cout << "Mouse Position: (" << mousePosition.x << ", " << mousePosition.y << ")" << std::endl;
-                // std::cout << "Tile Index: (" << tileIndex.x << ", " << tileIndex.y << ")" << std::endl;
-                // std::cout << "local Tile Position: (" << localTilePosition.x << ", " << localTilePosition.y << ")" << std::endl;
+                // std::cout << "GameObject Index: (" << tileIndex.x << ", " << tileIndex.y << ")" << std::endl;
+                // std::cout << "local GameObject Position: (" << localGameObjectPosition.x << ", " << localGameObjectPosition.y << ")" << std::endl;
                 tileIndexName = std::to_string(tileIndex.x) + " " + std::to_string(tileIndex.y);
-                tiles[tileIndexName] = new Tile(tileIndex, GetBrushTexture(), unitDimensions, localTilePosition, brushTexture);
+                tiles[tileIndexName] = new GameObject(tileIndex, GetBrushTexture(), unitDimensions, localGameObjectPosition, brushTexture);
             }
         }
     }
 }
 
-void GameManager::EraseTiles() {
-    mouseTile = GetCurrentTileIndex();
+void GameManager::EraseGameObjects() {
+    mouseGameObject = GetCurrentGameObjectIndex();
     int tempBrushSize = brushSize - 1;
     for (int i = -tempBrushSize; i <= tempBrushSize; i++) {
         for (int j = -tempBrushSize; j <= tempBrushSize; j++) {
-            if (!(mouseTile.x + i < 0 || mouseTile.x + i >= TILE_WIDTH 
-                || mouseTile.y + j < 0 || mouseTile.y + j >= TILE_HEIGHT)) { // hehehe
-                tileIndex = sf::Vector2i(mouseTile.x + i, mouseTile.y + j);
+            if (!(mouseGameObject.x + i < 0 || mouseGameObject.x + i >= TILE_WIDTH 
+                || mouseGameObject.y + j < 0 || mouseGameObject.y + j >= TILE_HEIGHT)) { // hehehe
+                tileIndex = sf::Vector2i(mouseGameObject.x + i, mouseGameObject.y + j);
                 tileIndexName = std::to_string(tileIndex.x) + " " + std::to_string(tileIndex.y);
                 tiles.erase(tileIndexName);
             }
@@ -247,9 +203,9 @@ void GameManager::EraseTiles() {
     }
 }
 
-void GameManager::EyedropTile() {
-    mouseTile = GetCurrentTileIndex();
-    tileIndexName = std::to_string(mouseTile.x) + " " + std::to_string(mouseTile.y);
+void GameManager::EyedropGameObject() {
+    mouseGameObject = GetCurrentGameObjectIndex();
+    tileIndexName = std::to_string(mouseGameObject.x) + " " + std::to_string(mouseGameObject.y);
     if (tiles.find(tileIndexName) != tiles.end()) {
         SetBrushTexture(tiles[tileIndexName]->textureNumber);
         brushType = Draw;
@@ -308,8 +264,8 @@ void GameManager::Load(std::string filename) {
         }
         SetBrushTexture(std::stoi(readLine));
 
-        localTilePosition = sf::Vector2f(tileIndex.x * unitDimensions.x + yMargin.x, tileIndex.y * unitDimensions.y + xMargin.y);
-        tiles[tileIndexName] = new Tile(tileIndex, GetBrushTexture(), unitDimensions, localTilePosition, brushTexture);
+        localGameObjectPosition = sf::Vector2f(tileIndex.x * unitDimensions.x + yMargin.x, tileIndex.y * unitDimensions.y + xMargin.y);
+        tiles[tileIndexName] = new GameObject(tileIndex, GetBrushTexture(), unitDimensions, localGameObjectPosition, brushTexture);
     }
 
     SetBrushTexture(1);

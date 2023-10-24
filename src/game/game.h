@@ -11,32 +11,23 @@
 #include <cmath>
 #include <fstream>
 
-#include "tile.h"
+#include "gameObject.h"
 
 class Game {
     protected:
         // window
         sf::RenderWindow* window;
-        sf::RenderWindow* windowPal;
-        sf::RenderWindow* windowText;
         float windowHeight;
         float windowWidth;
-        float windowPalHeight;
-        float windowPalWidth;
-        float windowTextHeight;
-        float windowTextWidth;
         sf::VideoMode videoMode;
         sf::Event event;
         sf::Vector2f mousePosition;
 
         const int SCREEN_WIDTH = 512;
         const int SCREEN_HEIGHT = 512;
-        const int PALETTE_SCREEN_WIDTH = 130;
-        const int PALETTE_SCREEN_HEIGHT = 512;
-        const int TEXT_SCREEN_WIDTH = 512;
-        const int TEXT_SCREEN_HEIGHT = 200;
         const int TILE_WIDTH = 64;
         const int TILE_HEIGHT = 64;
+
     public:
         Game();
         ~Game();
@@ -48,8 +39,6 @@ class Game {
         void Play();
         void CreateWindows();
         void LoadAssets();
-        void CreatePalette();
-
 
 };
 

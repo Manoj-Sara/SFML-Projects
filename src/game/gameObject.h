@@ -1,10 +1,10 @@
-#ifndef TILE_H
-#define TILE_H
+#ifndef GAME_OBJECT_H
+#define GAME_OBJECT_H
 
 #include <SFML/Graphics.hpp>
 #include <string.h>
 
-class Tile {
+class GameObject {
     public:
         sf::Vector2i index;
         sf::Sprite sprite;
@@ -14,9 +14,9 @@ class Tile {
         sf::Vector2f scale;
         int textureNumber;
 
-        Tile(sf::Vector2i, sf::Texture*, sf::Vector2f, sf::Vector2f, int);
-        Tile(Tile&);
-        ~Tile();
+        GameObject(sf::Vector2i, sf::Texture*, sf::Vector2f, sf::Vector2f, int);
+        GameObject(GameObject&);
+        ~GameObject();
 
         void Render(sf::RenderTarget&);
 

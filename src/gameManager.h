@@ -19,14 +19,14 @@ class GameManager: public Game {
         
         std::string assetPath;
         std::unordered_map<int, sf::Texture*> assets;
-        std::unordered_map<int, Tile*> sprites;
-        std::unordered_map<std::string, Tile*> tiles;
+        std::unordered_map<int, GameObject*> sprites;
+        std::unordered_map<std::string, GameObject*> tiles;
         sf::Text instructions;
         sf::Font font;
         
-        sf::Vector2i mouseTile;
+        sf::Vector2i mouseGameObject;
         sf::Vector2i tileIndex;
-        sf::Vector2f localTilePosition;
+        sf::Vector2f localGameObjectPosition;
         std::string tileIndexName;
     public:
         GameManager();
@@ -35,13 +35,12 @@ class GameManager: public Game {
         void CreateGrid(sf::Vector2i, sf::Vector2f, sf::Vector2f);
         void AddAsset(int, std::string);
         void LoadAssets();
-        void CreatePalette();
         void CreateInstructions();
 
-        void DrawTiles();
-        void EraseTiles();
-        void EyedropTile();
-        sf::Vector2i GetCurrentTileIndex();
+        void DrawGameObjects();
+        void EraseGameObjects();
+        void EyedropGameObject();
+        sf::Vector2i GetCurrentGameObjectIndex();
         sf::Texture* GetBrushTexture();
         void SetBrushTexture(int);
         void SetBrushSize(int);
