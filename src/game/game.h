@@ -25,8 +25,6 @@ class Game {
 
         const int SCREEN_WIDTH = 512;
         const int SCREEN_HEIGHT = 512;
-        const int TILE_WIDTH = 64;
-        const int TILE_HEIGHT = 64;
 
     public:
         Game();
