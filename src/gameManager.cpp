@@ -31,13 +31,13 @@ void GameManager::UpdateInput() {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         switch (brushType) {
             case Draw:
-                DrawGameObjects();
+                DrawParticles();
                 break;
             case Erase:
-                EraseGameObjects();
+                EraseParticles();
                 break;
             case Eyedrop:
-                EyedropGameObject();
+                EyedropParticle();
                 break;
             default:
                 break;
@@ -114,11 +114,11 @@ void GameManager::LoadAssets() {
         assetPath = "../../assets/textures/";
     #endif
 
-    AddAsset(1, assetPath + "BrickGameObject.png");
-    AddAsset(2, assetPath + "DirtGameObject.png");
-    AddAsset(3, assetPath + "GrassGameObject.png");
-    AddAsset(4, assetPath + "WaterGameObject.png");
-    AddAsset(5, assetPath + "PichuGameObject.png");
+    AddAsset(1, assetPath + "BrickParticle.png");
+    AddAsset(2, assetPath + "DirtParticle.png");
+    AddAsset(3, assetPath + "GrassParticle.png");
+    AddAsset(4, assetPath + "WaterParticle.png");
+    AddAsset(5, assetPath + "PichuParticle.png");
     AddAsset(6, assetPath + "PyoroRed.png");
     AddAsset(7, assetPath + "PyoroWhite.png");
     AddAsset(8, assetPath + "PyoroYellow.png");
@@ -157,7 +157,7 @@ void GameManager::CreateInstructions() {
     instructions.setString("  Draw: D         Erase: E        Eyedropper: I \n\n Sprite Type: 1, 2, 3, 4, 5, 6, 7, 8 \n\n Adjust Brush Size: Scroll \n\n Save: Ctrl + S        Load: Ctrl + L");
 }
 
-sf::Vector2i GameManager::GetCurrentGameObjectIndex() {
+sf::Vector2i GameManager::GetCurrentParticleIndex() {
     int currentX = static_cast<int>((mousePosition.x - xMargin.x) / unitDimensions.x);
     int currentY = static_cast<int>((mousePosition.y - yMargin.x) / unitDimensions.y);
     // std::cout << "X: " << currentX << ",Y: " << currentY << std::endl;
@@ -168,34 +168,34 @@ sf::Texture* GameManager::GetBrushTexture() {
     return assets[brushTexture];
 }
 
-void GameManager::DrawGameObjects() {
-    EraseGameObjects();
-    mouseGameObject = GetCurrentGameObjectIndex();
+void GameManager::DrawParticles() {
+    EraseParticles();
+    mouseParticle = GetCurrentParticleIndex();
     int tempBrushSize = brushSize - 1;
     for (int i = -tempBrushSize; i <= tempBrushSize; i++) {
         for (int j = -tempBrushSize; j <= tempBrushSize; j++) {
-            if (!(mouseGameObject.x + i < 0 || mouseGameObject.x + i >= TILE_WIDTH 
-                || mouseGameObject.y + j < 0 || mouseGameObject.y + j >= TILE_HEIGHT)) { // hehehe
-                tileIndex = sf::Vector2i(mouseGameObject.x + i, mouseGameObject.y + j);
-                localGameObjectPosition = sf::Vector2f(tileIndex.x * unitDimensions.x + xMargin.x, tileIndex.y * unitDimensions.y + yMargin.x);
+            if (!(mouseParticle.x + i < 0 || mouseParticle.x + i >= TILE_WIDTH 
+                || mouseParticle.y + j < 0 || mouseParticle.y + j >= TILE_HEIGHT)) { // hehehe
+                tileIndex = sf::Vector2i(mouseParticle.x + i, mouseParticle.y + j);
+                localParticlePosition = sf::Vector2f(tileIndex.x * unitDimensions.x + xMargin.x, tileIndex.y * unitDimensions.y + yMargin.x);
                 // std::cout << "Mouse Position: (" << mousePosition.x << ", " << mousePosition.y << ")" << std::endl;
-                // std::cout << "GameObject Index: (" << tileIndex.x << ", " << tileIndex.y << ")" << std::endl;
-                // std::cout << "local GameObject Position: (" << localGameObjectPosition.x << ", " << localGameObjectPosition.y << ")" << std::endl;
+                // std::cout << "Particle Index: (" << tileIndex.x << ", " << tileIndex.y << ")" << std::endl;
+                // std::cout << "local Particle Position: (" << localParticlePosition.x << ", " << localParticlePosition.y << ")" << std::endl;
                 tileIndexName = std::to_string(tileIndex.x) + " " + std::to_string(tileIndex.y);
-                tiles[tileIndexName] = new GameObject(tileIndex, GetBrushTexture(), unitDimensions, localGameObjectPosition, brushTexture);
+                tiles[tileIndexName] = new Particle(tileIndex, GetBrushTexture(), unitDimensions, localParticlePosition, brushTexture);
             }
         }
     }
 }
 
-void GameManager::EraseGameObjects() {
-    mouseGameObject = GetCurrentGameObjectIndex();
+void GameManager::EraseParticles() {
+    mouseParticle = GetCurrentParticleIndex();
     int tempBrushSize = brushSize - 1;
     for (int i = -tempBrushSize; i <= tempBrushSize; i++) {
         for (int j = -tempBrushSize; j <= tempBrushSize; j++) {
-            if (!(mouseGameObject.x + i < 0 || mouseGameObject.x + i >= TILE_WIDTH 
-                || mouseGameObject.y + j < 0 || mouseGameObject.y + j >= TILE_HEIGHT)) { // hehehe
-                tileIndex = sf::Vector2i(mouseGameObject.x + i, mouseGameObject.y + j);
+            if (!(mouseParticle.x + i < 0 || mouseParticle.x + i >= TILE_WIDTH 
+                || mouseParticle.y + j < 0 || mouseParticle.y + j >= TILE_HEIGHT)) { // hehehe
+                tileIndex = sf::Vector2i(mouseParticle.x + i, mouseParticle.y + j);
                 tileIndexName = std::to_string(tileIndex.x) + " " + std::to_string(tileIndex.y);
                 tiles.erase(tileIndexName);
             }
@@ -203,9 +203,9 @@ void GameManager::EraseGameObjects() {
     }
 }
 
-void GameManager::EyedropGameObject() {
-    mouseGameObject = GetCurrentGameObjectIndex();
-    tileIndexName = std::to_string(mouseGameObject.x) + " " + std::to_string(mouseGameObject.y);
+void GameManager::EyedropParticle() {
+    mouseParticle = GetCurrentParticleIndex();
+    tileIndexName = std::to_string(mouseParticle.x) + " " + std::to_string(mouseParticle.y);
     if (tiles.find(tileIndexName) != tiles.end()) {
         SetBrushTexture(tiles[tileIndexName]->textureNumber);
         brushType = Draw;
@@ -264,8 +264,8 @@ void GameManager::Load(std::string filename) {
         }
         SetBrushTexture(std::stoi(readLine));
 
-        localGameObjectPosition = sf::Vector2f(tileIndex.x * unitDimensions.x + yMargin.x, tileIndex.y * unitDimensions.y + xMargin.y);
-        tiles[tileIndexName] = new GameObject(tileIndex, GetBrushTexture(), unitDimensions, localGameObjectPosition, brushTexture);
+        localParticlePosition = sf::Vector2f(tileIndex.x * unitDimensions.x + yMargin.x, tileIndex.y * unitDimensions.y + xMargin.y);
+        tiles[tileIndexName] = new Particle(tileIndex, GetBrushTexture(), unitDimensions, localParticlePosition, brushTexture);
     }
 
     SetBrushTexture(1);

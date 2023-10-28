@@ -11,7 +11,7 @@
 #include <cmath>
 #include <fstream>
 
-#include "gameObject.h"
+#include "particle.h"
 
 class Game {
     protected:

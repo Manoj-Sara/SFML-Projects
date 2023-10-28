@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <string.h>
 
-class GameObject {
+class Particle {
     public:
         sf::Vector2i index;
         sf::Sprite sprite;
@@ -14,9 +14,9 @@ class GameObject {
         sf::Vector2f scale;
         int textureNumber;
 
-        GameObject(sf::Vector2i, sf::Texture*, sf::Vector2f, sf::Vector2f, int);
-        GameObject(GameObject&);
-        ~GameObject();
+        Particle(sf::Vector2i, sf::Texture*, sf::Vector2f, sf::Vector2f, int);
+        Particle(Particle&);
+        ~Particle();
 
         void Render(sf::RenderTarget&);
 
