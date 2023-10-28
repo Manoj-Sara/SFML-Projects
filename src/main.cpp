@@ -9,6 +9,8 @@
 //    #endif
 // #endif
 
+// this memory shit does NOT work on Mac holy
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "gameManager.h"
