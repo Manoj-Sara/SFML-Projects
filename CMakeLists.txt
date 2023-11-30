@@ -9,7 +9,7 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(CMakeSFMLProject src/main.cpp src/game/gameObject.h src/game/gameObject.cpp src/game/game.h src/game/game.cpp src/gameManager.h src/gameManager.cpp)
+add_executable(CMakeSFMLProject src/main.cpp src/game/gameObject.h src/game/gameObject.cpp src/game/game.h src/game/game.cpp src/gameManager.h src/gameManager.cpp src/game/state.h src/game/state.cpp src/game/stateStack.h src/game/stateStack.cpp)
 target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics)
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_17)
 
