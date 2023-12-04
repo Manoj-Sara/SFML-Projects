@@ -1,25 +1,31 @@
 #include "state.h"
+#include "stateStack.h"
 
-State::State() {
-
+State::State(StateStack& stack, Context context) : stack(&stack), context(context) {
+    font.loadFromFile("../../assets/fonts/Helvetica.ttf");
 }
 
 State::~State() {
 
 }
 
-void State::Update(sf::Time deltaTime) {
-    
+State::Context State::GetContext() const {
+    return context;
 }
 
-void State::UpdateDisplay() {
-
+void State::RequestStackPush(States::ID stateID) {
+    stack->PushState(stateID);
 }
 
-void State::UpdateInput() {
-
+void State::RequestStackPop() {
+    stack->PopState();
 }
 
-void State::UpdateEvents() {
-    
+void State::RequestStackClear() {
+    stack->ClearStates();
+}
+
+void State::CenterOrigin(sf::Text& text) {
+    sf::FloatRect bounds = text.getLocalBounds();
+    text.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 }

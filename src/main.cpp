@@ -1,10 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "gameManager.h"
+// #include "gameManager.h"
+#include "application.h"
 
 int main()
 {
-   GameManager gameManager;
+   //GameManager gameManager;
+   Application gameManager;
    gameManager.Play();
    return 0;
 }

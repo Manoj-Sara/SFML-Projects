@@ -1,9 +1,10 @@
 #ifndef STATE_IDENTIFIERS_H
 #define STATE_IDENTIFIERS_H
 
-class StateIdentifiers {
+class States {
     public:
-        enum States {
+        enum ID {
+            None,
             Title,
             Menu,
             Game,

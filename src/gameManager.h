@@ -21,7 +21,7 @@ class GameManager: public Game {
         std::unordered_map<int, sf::Texture*> assets;
         std::unordered_map<int, GameObject*> sprites;
         std::unordered_map<std::string, GameObject*> tiles;
-        sf::Text instructions;
+        sf::Text typeText;
         sf::Font font;
         
         sf::Vector2i mouseGameObject;
@@ -35,15 +35,8 @@ class GameManager: public Game {
         void CreateGrid(sf::Vector2i, sf::Vector2f, sf::Vector2f);
         void AddAsset(int, std::string);
         void LoadAssets();
-        void CreateInstructions();
 
-        void DrawGameObjects();
-        void EraseGameObjects();
-        void EyedropGameObject();
         sf::Vector2i GetCurrentGameObjectIndex();
-        sf::Texture* GetBrushTexture();
-        void SetBrushTexture(int);
-        void SetBrushSize(int);
 
         void Update() override;
         void UpdateDisplay() override;

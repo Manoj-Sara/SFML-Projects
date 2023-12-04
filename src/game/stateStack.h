@@ -1,26 +1,12 @@
+// Code referenced from the SFML Game Development (2013) book that I'm definitely using legally
+
 #ifndef STATE_STACK_H
 #define STATE_STACK_H
 
 #include "state.h"
 #include "stateIdentifiers.h"
 
-class StateStack : private sf::NonCopyable
-{
-    private:
-        State::Ptr CreateState(States::ID stateID);
-        void ApplyPendingChanges();
-        struct PendingChange
-        {
-            ...
-            Action action;
-            States::ID stateID;
-        };
-
-        std::vector<State::Ptr> mStack;
-        std::vector<PendingChange> mPendingList;
-        State::Context mContext;
-        std::map<States::ID, std::function<State::Ptr()>> mFactories;
-
+class StateStack : private sf::NonCopyable {
     public:
         enum Action {
             Push,
@@ -29,7 +15,8 @@ class StateStack : private sf::NonCopyable
         };
 
         explicit StateStack(State::Context context);
-        template <typename T> void RegisterState(States::ID stateID);
+        template <typename T>
+        void RegisterState(States::ID stateID);
         void Update(sf::Time deltaTime);
         void Draw();
         void HandleEvent(const sf::Event& event);
@@ -37,6 +24,39 @@ class StateStack : private sf::NonCopyable
         void PopState();
         void ClearStates();
         bool IsEmpty() const;
+        int StackSize();
+        State::Context GetContext() const;
+        void SetFont(sf::Font font);
+        void SetPlayerCount(int pCount);
+
+    
+    private:
+        State::ptr CreateState(States::ID stateID);
+        void ApplyPendingChanges();
+        struct PendingChange
+        {
+            Action action;
+            States::ID stateID;
+
+             explicit PendingChange(Action action, States::ID stateID = States::None) : action(action), stateID(stateID) {};
+        };
+
+        std::vector<State::ptr> stack;
+        std::vector<PendingChange> pendingList;
+        State::Context context;
+        std::map<States::ID, std::function<State::ptr()>> factories;
+
 };
 
+template <typename T>
+void StateStack::RegisterState (States::ID stateID) {
+    // for(const auto& elem : factories) {
+    //     std::cout << elem.first << " " << std::endl;
+    // }
+    factories[stateID] = [this] () {
+        return State::ptr(new T(*this, context));
+    };
+}
+
 #endif
+
