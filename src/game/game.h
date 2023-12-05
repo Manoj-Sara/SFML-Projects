@@ -11,12 +11,10 @@
 #include <cmath>
 #include <fstream>
 
-#include "gameObject.h"
 #include "stateStack.h"
 
 class Game {
     protected:
-        // window
         sf::RenderWindow window;
         float windowHeight;
         float windowWidth;
@@ -25,12 +23,10 @@ class Game {
 
         StateStack stateStack;
 
-        static const sf::Time timePerFrame;
+        const sf::Time timePerFrame = sf::seconds(1.0f/60.0f);
 
-        const int SCREEN_WIDTH = 512;
+        const int SCREEN_WIDTH = 700;
         const int SCREEN_HEIGHT = 512;
-        const int TILE_WIDTH = 64;
-        const int TILE_HEIGHT = 64;
 
         sf::Font font;
         std::string assetPath;
@@ -38,13 +34,8 @@ class Game {
     public:
         Game();
         ~Game();
-        // virtual void Update();
-        // virtual void UpdateDisplay();
-        // virtual void UpdateInput();
-        // void UpdateMouse();
         void Play();
         void CreateWindow();
-        // virtual void LoadAssets();
 
         virtual void RegisterStates();
         virtual void Update(sf::Time deltaTime);

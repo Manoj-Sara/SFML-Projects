@@ -11,10 +11,8 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(CMakeSFMLProject 
                src/main.cpp 
-               src/game/gameObject.h src/game/gameObject.cpp 
                src/game/game.h src/game/game.cpp 
-               # src/gameManager.h src/gameManager.cpp
-               src/application.h src/application.cpp
+               src/gameManager.h src/gameManager.cpp
                src/game/state.h src/game/state.cpp 
                src/game/stateStack.h src/game/stateStack.cpp
                src/states/titleState.h src/states/titleState.cpp

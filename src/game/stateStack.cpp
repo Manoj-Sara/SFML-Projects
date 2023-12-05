@@ -6,8 +6,6 @@ StateStack::StateStack(State::Context context)
 
 State::ptr StateStack::CreateState(States::ID stateID) {
     auto found = factories.find(stateID);
-    // assert(found != factories.end());
-
     return found->second();
 }
 
@@ -23,10 +21,6 @@ void StateStack::Update(sf::Time deltaTime)
 
 void StateStack::HandleEvent(const sf::Event& event)
 {
-    // if (event.type == sf::Event::Closed) {
-    //     context.window->close();
-    //     return;
-    // }
 
     for (auto itr = stack.rbegin(); itr != stack.rend(); ++itr) {
         if ((*itr)->UpdateEvents(event) == false)
@@ -37,10 +31,8 @@ void StateStack::HandleEvent(const sf::Event& event)
 }
 
 void StateStack::Draw() {
-    // context.window->clear();
 
     for (State::ptr& state : stack) {
-        //std::cout << "About to update state" << std::endl;
         state->UpdateDisplay();
 
     }

@@ -1,5 +1,3 @@
-// Code referenced from the SFML Game Development (2013) book that I'm definitely using legally
-
 #ifndef STATE_STACK_H
 #define STATE_STACK_H
 
@@ -50,9 +48,6 @@ class StateStack : private sf::NonCopyable {
 
 template <typename T>
 void StateStack::RegisterState (States::ID stateID) {
-    // for(const auto& elem : factories) {
-    //     std::cout << elem.first << " " << std::endl;
-    // }
     factories[stateID] = [this] () {
         return State::ptr(new T(*this, context));
     };

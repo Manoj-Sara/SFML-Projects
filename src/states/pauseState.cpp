@@ -9,13 +9,17 @@ PauseState::~PauseState() {
 }
 
 bool PauseState::Update(sf::Time deltaTime) {
-    return true;
+    return false;
 }
 
 bool PauseState::UpdateEvents(const sf::Event& event) {
-    if (event.key.code == sf::Keyboard::Escape) {
-        RequestStackClear();
-        RequestStackPush(States::Menu);
+    if (event.type != sf::Event::KeyPressed) {
+        return false;
+    }
+
+    if (event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::P) {
+        RequestStackPop();
+        std::cout << "Moving from Pause to Game" << std::endl;
     }
 
     return false;

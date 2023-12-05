@@ -40,6 +40,7 @@ class State {
         virtual void UpdateDisplay() = 0;
 
         void CenterOrigin(sf::Text& text);
+        void CenterOrigin(sf::Shape& shape);
 
     protected:
         sf::Font font;
@@ -49,6 +50,7 @@ class State {
         void RequestStackClear();
 
         Context GetContext() const;
+        void SetPlayerCount(int pCount);
 
     private:
         StateStack* stack;

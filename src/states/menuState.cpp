@@ -9,8 +9,7 @@ MenuState::MenuState(StateStack& stack, Context context) : State::State(stack, c
     optionIndex = 0;
     options[0].setFillColor(sf::Color::Black);
     optionBox.setFillColor(sf::Color::White);
-    sf::FloatRect bounds = optionBox.getLocalBounds();
-    optionBox.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
+    CenterOrigin(optionBox);
     optionBox.setPosition(options[0].getPosition());
 }
 
@@ -47,16 +46,16 @@ bool MenuState::UpdateEvents(const sf::Event& event) {
         // Code neater with pop request in every condition even if repititive
 
         if (optionIndex == Play1P) {
+            std::cout << "Moving from Menu to 1P" << std::endl;
             RequestStackPop();
-            //stack.SetPlayerCount(1);
+            SetPlayerCount(1);
             RequestStackPush(States::Game);
-            // stack->SetPlayerCount(1);
         }
         else if (optionIndex == Play2P) {
+            std::cout << "Moving from Menu to 2P" << std::endl;
             RequestStackPop();
-            //stack.SetPlayerCount(2);
+            SetPlayerCount(2);
             RequestStackPush(States::Game);
-            // stack->SetPlayerCount(2);
         }
         else if (optionIndex == Exit) {
             RequestStackPop(); // Clearing the stack leaves the game
@@ -77,13 +76,14 @@ void MenuState::UpdateDisplay() {
 }
 
 sf::Text MenuState::NewOption(std::string optionText) {
+    sf::RenderWindow& window = *GetContext().window;
     sf::Text newOption;
     float newOptionPos = options.size() * 50;
     newOption.setFont(font);
     newOption.setString(optionText);
     newOption.setCharacterSize(20);
     CenterOrigin(newOption);
-    newOption.setPosition(256, 200 + newOptionPos);
+    newOption.setPosition(window.getSize().x/2, window.getSize().y/2 - 50 + newOptionPos);
     return newOption;
 }
 

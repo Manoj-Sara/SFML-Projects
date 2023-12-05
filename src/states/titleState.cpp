@@ -1,25 +1,19 @@
 #include "titleState.h"
 
 TitleState::TitleState(StateStack& stack, Context context) : State(stack, context), titleText(), promptText() {
+    sf::RenderWindow& window = *GetContext().window;
     blinkTime = sf::Time::Zero;
     showText = true;
-
-    //titleText.setFont(context.font);
-    //std::cout << font.getInfo().family << std::endl;
-    std::cout << context.font.getInfo().family << std::endl;
     titleText.setFont(font);
     titleText.setString("PONG");
     CenterOrigin(titleText);
-    //titleText.setPosition(context.window->getView().getSize() / 2.f);
-    titleText.setPosition(246, 200);
+    titleText.setPosition(window.getSize().x/2 - 20, 200);
     titleText.setCharacterSize(50);
 
-    //promptText.setFont(context.font);
     promptText.setFont(font);
     promptText.setString("Press any key to start");
     CenterOrigin(promptText);
-    //promptText.setPosition(context.window->getView().getSize() / 2.f);
-    promptText.setPosition(256, 400);
+    promptText.setPosition(window.getSize().x/2, 400);
     promptText.setCharacterSize(30);
 }
 
@@ -54,11 +48,8 @@ bool TitleState::Update(sf::Time deltaTime) {
 }
 
 void TitleState::UpdateDisplay() {
-    //std::cout << "HEre's the problem" << std::endl;
     sf::RenderWindow& window = *GetContext().window;
-    //std::cout << "got window" << std::endl;
     window.draw(titleText);
-    //std::cout << "Drew titeltext" << std::endl;
     if (showText == true)
         window.draw(promptText);
 }
