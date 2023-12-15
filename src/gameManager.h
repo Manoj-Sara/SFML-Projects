@@ -2,56 +2,56 @@
 #define GAME_MANAGER_H
 
 #include "game/game.h"
+#include "verletObject.hpp"
+#include "solver.hpp"
+#include "utils/math.hpp"
+#include "utils/number_generator.hpp"
 
 class GameManager: public Game {
-    enum BrushType {Draw, Erase, Eyedrop};
 
     protected:
-        sf::VertexArray grid;
-        sf::Vector2i gridDimensions;
         sf::Vector2f xMargin;
         sf::Vector2f yMargin;
         sf::Vector2f unitDimensions;
-
-        BrushType brushType = Draw;
-        int brushSize = 1;
-        int brushTexture = 1;
+        sf::Clock clock;
+        sf::RectangleShape *loseLine;
         
         std::string assetPath;
         std::unordered_map<int, sf::Texture*> assets;
         std::unordered_map<int, GameObject*> sprites;
         std::unordered_map<std::string, GameObject*> tiles;
-        sf::Text instructions;
+        std::vector<std::tuple<float, sf::Color>> balls;
+        sf::Text winText;
         sf::Font font;
         
         sf::Vector2i mouseGameObject;
         sf::Vector2i tileIndex;
         sf::Vector2f localGameObjectPosition;
+        float maxLeft;
+        float maxRight;
+        float newPosition;
         std::string tileIndexName;
+
+        Solver   solver;
+        const float object_spawn_delay = 1.0f;
+        const float spawnHeight = 100.0f;
+        int currentBall;
+
     public:
         GameManager();
         ~GameManager();
 
-        void CreateGrid(sf::Vector2i, sf::Vector2f, sf::Vector2f);
         void AddAsset(int, std::string);
         void LoadAssets();
-        void CreateInstructions();
+        void CreateWinText();
 
-        void DrawGameObjects();
-        void EraseGameObjects();
-        void EyedropGameObject();
         sf::Vector2i GetCurrentGameObjectIndex();
-        sf::Texture* GetBrushTexture();
-        void SetBrushTexture(int);
-        void SetBrushSize(int);
+        void SpawnBall();
 
         void Update() override;
         void UpdateDisplay() override;
         void UpdateInput() override;
         void UpdateEvents() override;
-
-        void Save();
-        void Load(std::string);
 };
 
 #endif

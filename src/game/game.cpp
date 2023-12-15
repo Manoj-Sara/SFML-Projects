@@ -17,7 +17,7 @@ void Game::Update() {
 }
 
 void Game::UpdateDisplay() {
-    window->clear();
+    window->clear(sf::Color::White);
 }
 
 void Game::UpdateInput() {

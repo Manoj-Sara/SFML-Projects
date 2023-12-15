@@ -10,6 +10,7 @@
 #include <vector>
 #include <cmath>
 #include <fstream>
+#include <tuple>
 
 #include "gameObject.h"
 
@@ -23,8 +24,8 @@ class Game {
         sf::Event event;
         sf::Vector2f mousePosition;
 
-        const int SCREEN_WIDTH = 512;
-        const int SCREEN_HEIGHT = 512;
+        const int SCREEN_WIDTH = 1000;
+        const int SCREEN_HEIGHT = 800;
         const int TILE_WIDTH = 64;
         const int TILE_HEIGHT = 64;
 
